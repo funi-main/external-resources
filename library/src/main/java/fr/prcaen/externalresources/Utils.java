@@ -6,11 +6,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
-import android.support.annotation.AnyRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.AnyRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -22,7 +22,8 @@ import static android.os.Build.VERSION_CODES.M;
 
 public final class Utils {
 
-  @Nullable public static NetworkInfo getActiveNetworkInfo(Context context) {
+  @Nullable
+  public static NetworkInfo getActiveNetworkInfo(Context context) {
     if (!hasNetworkStatePermission(context)) {
       Logger.w(ExternalResources.TAG,
           "To work perfectly, ACCESS_NETWORK_STATE permission is required.");

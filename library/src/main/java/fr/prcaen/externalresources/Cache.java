@@ -2,7 +2,7 @@ package fr.prcaen.externalresources;
 
 import android.content.Context;
 import android.os.StatFs;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,6 +14,7 @@ public final class Cache {
   public static final int POLICY_NONE = 0;
   public static final int POLICY_OFFLINE = 1;
   public static final int POLICY_ALL = 2;
+  public static final int POLICY_DEFAULT = 3;
   protected static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024;  // 5MB
   protected static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
   private static final String EXTERNAL_RESOURCES_FILE_NAME_CACHE = "external-resources-cache";
@@ -21,7 +22,7 @@ public final class Cache {
   private final long cacheSize;
 
   @Retention(RetentionPolicy.SOURCE) @IntDef({
-      POLICY_NONE, POLICY_OFFLINE, POLICY_ALL
+      POLICY_NONE, POLICY_OFFLINE, POLICY_ALL, POLICY_DEFAULT
   }) public @interface Policy {
   }
 

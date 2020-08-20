@@ -7,8 +7,10 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+
 import fr.prcaen.externalresources.exception.ExternalResourceException;
 import fr.prcaen.externalresources.model.Resources;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +35,8 @@ public final class Dispatcher {
   private final Handler handler;
   private final Handler mainHandler;
 
-  @Nullable private NetworkInfo networkInfo;
+  @Nullable
+  private NetworkInfo networkInfo;
   private boolean airPlaneMode;
   private ResourcesRunnable resourcesRunnable;
   private boolean needReplay = false;
@@ -58,6 +61,10 @@ public final class Dispatcher {
     service.shutdown();
     dispatcherThread.quit();
     networkBroadcastReceiver.unregister();
+  }
+
+  public void clearCache(){
+    this.resourcesRunnable.clearCache();
   }
 
   public void dispatchLaunch() {

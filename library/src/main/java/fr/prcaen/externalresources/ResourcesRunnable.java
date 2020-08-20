@@ -1,6 +1,7 @@
 package fr.prcaen.externalresources;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import fr.prcaen.externalresources.exception.ExternalResourceException;
 import fr.prcaen.externalresources.exception.ResponseException;
 import fr.prcaen.externalresources.model.Resources;
@@ -16,11 +17,15 @@ public final class ResourcesRunnable implements Runnable {
   private int retryCount;
 
   public ResourcesRunnable(@NonNull Downloader downloader, @NonNull Dispatcher dispatcher,
-      @Cache.Policy int policy) {
+                           @Cache.Policy int policy) {
     this.downloader = downloader;
     this.dispatcher = dispatcher;
     this.cachePolicy = policy;
     this.retryCount = RETRY_COUNT;
+  }
+
+  public void clearCache(){
+    downloader.clearCache();
   }
 
   @Override public void run() {

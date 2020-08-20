@@ -1,7 +1,8 @@
 package fr.prcaen.externalresources.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+
 import com.google.gson.internal.LazilyParsedNumber;
 
 public final class Resource {
@@ -47,7 +48,8 @@ public final class Resource {
     }
   }
 
-  @Nullable public String getAsString() {
+  @Nullable
+  public String getAsString() {
     if (isNumber() && null != getAsNumber()) {
       return getAsNumber().toString();
     } else if (isBoolean() && null != getAsNonPrimitiveBoolean()) {

@@ -1,6 +1,7 @@
 package fr.prcaen.externalresources.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import fr.prcaen.externalresources.converter.Converter;
 import fr.prcaen.externalresources.converter.JsonConverter;
 import fr.prcaen.externalresources.converter.XmlConverter;

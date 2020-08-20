@@ -1,6 +1,7 @@
 package fr.prcaen.externalresources.converter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+
 import fr.prcaen.externalresources.model.Resource;
 import fr.prcaen.externalresources.model.Resources;
 import java.io.IOException;
@@ -65,7 +66,8 @@ public final class XmlConverter implements Converter {
     return fromReader(new StringReader(string));
   }
 
-  @Nullable protected SimpleEntry<String, Resource> get(Node node) throws DOMException {
+  @Nullable
+  protected SimpleEntry<String, Resource> get(Node node) throws DOMException {
     final String key = node.getAttributes().getNamedItem(ATTRIBUTE_NAME).getNodeValue();
     final Resource value = getResource(node);
 

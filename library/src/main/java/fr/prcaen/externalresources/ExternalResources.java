@@ -7,18 +7,23 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.AnyRes;
-import android.support.annotation.ArrayRes;
-import android.support.annotation.BoolRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.IntegerRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.AnyRes;
+import androidx.annotation.ArrayRes;
+import androidx.annotation.BoolRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.IntegerRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
 import android.util.DisplayMetrics;
+
 import fr.prcaen.externalresources.converter.Converter;
 import fr.prcaen.externalresources.converter.JsonConverter;
 import fr.prcaen.externalresources.exception.ExternalResourceException;
@@ -52,7 +57,8 @@ public class ExternalResources {
   public static final String TAG = "ExternalResources";
 
   protected static volatile ExternalResources singleton = null;
-  @NonNull protected final ArrayList<OnExternalResourcesChangeListener> listeners =
+  @NonNull
+  protected final ArrayList<OnExternalResourcesChangeListener> listeners =
       new ArrayList<>();
   @NonNull private final Context context;
   @NonNull private final DisplayMetrics metrics;
@@ -186,6 +192,10 @@ public class ExternalResources {
     return singleton;
   }
 
+  private void clearCache() {
+    this.dispatcher.clearCache();
+  }
+
   /**
    * This method should be call on in callback Application#onConfigurationChanged
    * This allow to detected changes device configuration changes while your component is running.
@@ -202,6 +212,13 @@ public class ExternalResources {
     }
 
     this.configuration = new Configuration(newConfig);
+  }
+
+  public void forceRefresh() {
+    Logger.v(TAG, "Clearing cache before launch.");
+    clearCache();
+    Logger.v(TAG, "Relaunch (via force refresh)");
+    launch();
   }
 
   /**

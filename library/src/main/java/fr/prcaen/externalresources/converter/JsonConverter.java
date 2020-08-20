@@ -1,6 +1,7 @@
 package fr.prcaen.externalresources.converter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -23,7 +24,8 @@ public final class JsonConverter implements Converter {
       new GsonBuilder().registerTypeAdapter(Resource.class, new ResourceJsonDeserializer())
           .create();
 
-  @Override @Nullable public Resources fromReader(Reader reader) throws IOException {
+  @Override @Nullable
+  public Resources fromReader(Reader reader) throws IOException {
     JsonObject jsonObject = GSON.fromJson(reader, JsonObject.class);
 
     if (null == jsonObject) {

@@ -2,7 +2,7 @@ package fr.prcaen.externalresources;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -29,6 +29,8 @@ public final class Downloader {
   @NonNull private final Converter converter;
   @NonNull private final Url url;
   @NonNull private final Options options;
+  @NonNull private final Cache cache;
+  private boolean mustClearCache = false;
 
   public Downloader(@NonNull Context context, @NonNull Converter converter, @NonNull Url url,
       @NonNull Options options) {
@@ -42,13 +44,16 @@ public final class Downloader {
     this.url = url;
     this.options = options;
     this.converter = converter;
-
-    Cache cache = new Cache(context.getApplicationContext());
+    this.cache = new Cache(context.getApplicationContext());
 
     client.setConnectTimeout(CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
     client.setReadTimeout(READ_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
     client.setWriteTimeout(WRITE_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-    client.setCache(new com.squareup.okhttp.Cache(cache.getCacheDir(), cache.getCacheSize()));
+    client.setCache(new com.squareup.okhttp.Cache(this.cache.getCacheDir(), this.cache.getCacheSize()));
+  }
+
+  public void clearCache(){
+    this.mustClearCache = true;
   }
 
   public Resources load(@Cache.Policy int policy) throws ExternalResourceException {
@@ -57,17 +62,37 @@ public final class Downloader {
     Logger.i(ExternalResources.TAG, "Load configuration from url: " + url.build());
 
     final CacheControl cacheControl;
-    switch (policy) {
-      case Cache.POLICY_NONE:
-        cacheControl = new CacheControl.Builder().noCache().noStore().build();
-        break;
-      case Cache.POLICY_OFFLINE:
-        cacheControl = CacheControl.FORCE_CACHE;
-        break;
-      case Cache.POLICY_ALL:
-      default:
-        cacheControl = new CacheControl.Builder().build();
-        break;
+
+    if(this.mustClearCache)
+    {
+      CacheControl.Builder  ccb = new CacheControl.Builder().noCache();
+
+      // NOTE : We don't handle POLICY_NONE as there should not be any cache anyway
+
+      // NOTE : Both these policies need maxStale to max
+      if(policy == Cache.POLICY_DEFAULT || policy == Cache.POLICY_OFFLINE){
+        ccb = ccb.maxStale(Integer.MAX_VALUE, TimeUnit.SECONDS);
+      }
+      cacheControl = ccb.build();
+      mustClearCache = false;
+    }
+    else
+    {
+      switch (policy) {
+        case Cache.POLICY_NONE:
+          cacheControl = new CacheControl.Builder().noCache().noStore().build();
+          break;
+        case Cache.POLICY_OFFLINE:
+          cacheControl = CacheControl.FORCE_CACHE;
+          break;
+        case Cache.POLICY_DEFAULT:
+          cacheControl =  new CacheControl.Builder().maxStale(Integer.MAX_VALUE, TimeUnit.SECONDS).build();
+          break;
+        case Cache.POLICY_ALL:
+        default:
+          cacheControl = new CacheControl.Builder().build();
+          break;
+      }
     }
 
     Logger.v(ExternalResources.TAG, "CachePolicy: " + policy);

@@ -1,7 +1,8 @@
 package fr.prcaen.externalresources;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import android.util.Log;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

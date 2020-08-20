@@ -1,6 +1,6 @@
 package fr.prcaen.externalresources.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
