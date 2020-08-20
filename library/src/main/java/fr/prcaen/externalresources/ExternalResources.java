@@ -68,12 +68,13 @@ public class ExternalResources {
   @Nullable private OnExternalResourcesLoadFailedListener failedListener;
   @NonNull private Resources resources;
   @NonNull private Configuration configuration;
+  private boolean ignoreCacheOnFirstLoad;
 
   private ExternalResources(@NonNull Context context, @NonNull Converter converter,
       @NonNull Url url, @NonNull Options options, @Cache.Policy int cachePolicy,
       @Logger.Level int logLevel, @NonNull Resources defaultResources,
       @Nullable OnExternalResourcesLoadFailedListener failedListener,
-      boolean useApplicationResources) {
+      boolean useApplicationResources, boolean ignoreCacheOnFirstLoad) {
     Logger.setLevel(logLevel);
 
     this.context = context;
@@ -85,6 +86,7 @@ public class ExternalResources {
     this.options = options;
     this.failedListener = failedListener;
     this.useApplicationResources = useApplicationResources;
+    this.ignoreCacheOnFirstLoad = ignoreCacheOnFirstLoad;
 
     launch();
   }
@@ -674,8 +676,12 @@ public class ExternalResources {
   }
 
   private void launch() {
+    if(this.ignoreCacheOnFirstLoad){
+      Logger.v(TAG, "Clearing cache before first launch.");
+      clearCache();
+      this.ignoreCacheOnFirstLoad = false;
+    }
     Logger.v(TAG, "Launch");
-
     dispatcher.dispatchLaunch();
   }
 
@@ -743,6 +749,7 @@ public class ExternalResources {
     @Nullable private Options options;
     @Nullable private Converter converter;
     private boolean useApplicationResources = true;
+    private boolean ignoreCacheOnFirstLoad = false;
 
     /**
      * Initialize builder with mandatory parameters.
@@ -881,6 +888,11 @@ public class ExternalResources {
       return this;
     }
 
+    public Builder ignoreCacheOnFirstLoad(boolean ignoreCacheOnFirstLoad) {
+      this.ignoreCacheOnFirstLoad = ignoreCacheOnFirstLoad;
+      return this;
+    }
+
     /**
      * Build ExternalResources instance.
      *
@@ -900,7 +912,7 @@ public class ExternalResources {
       }
 
       return new ExternalResources(context, converter, url, options, cachePolicy, logLevel,
-          defaultResources, listener, useApplicationResources);
+          defaultResources, listener, useApplicationResources, ignoreCacheOnFirstLoad);
     }
   }
 
