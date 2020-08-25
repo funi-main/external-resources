@@ -210,6 +210,12 @@ public class ExternalResources {
     if (shouldRelaunch(newConfig)) {
       Logger.v(TAG, "Relaunch");
 
+      // NOTE : Makes sure to renew our local Resources object :
+      // - When a resource is retrieved from context's resources, it's added here to fasten its next retrieval
+      // - When we change our app locale while the app is active, we must be sure to clear this object
+      // in order to avoid having mixed locale resources (old cached Spanish + new external English for example)
+      this.resources = new Resources();
+
       launch();
     }
 
